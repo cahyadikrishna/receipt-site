@@ -1,32 +1,35 @@
 <script>
-import { defineComponent, computed } from "vue";
+import { ref } from "vue";
+import Title from "./components/Title.vue";
+import Card from "./components/Card.vue";
+import { computed } from "vue";
 
-export default defineComponent({
-  setup() {
-    const truncateText = (str, length, ending) => {
-      if (length == null) {
-        length = 100;
-      }
-      if (ending == null) {
-        ending = "...";
-      }
-      if (str.length > length) {
-        return str.substring(0, length - ending.length) + ending;
-      } else {
-        return str;
-      }
-    };
-
-    return { truncateText };
+export default {
+  name: "App",
+  components: {
+    Title,
+    Card,
   },
-});
+  setup() {
+    const categoryData = ref([]);
+
+    async function getData(){
+    const response = await fetch("https://www.themealdb.com/api/json/v1/1/categories.php")
+        const json = await response.json()
+        console.log(json)
+        categoryData.value = json.categories;
+        console.log(categoryData.value)
+    }
+    getData()
+
+    return {Title, Card, categoryData};
+  },
+};
 </script>
 
 <template>
   <div class="container d-flex flex-column justify-content-center">
-    <!-- Search bar -->
-    <p class="text-center fs-1 fw-bold text-primary mt-5">Foody Receipt</p>
-
+    <!-- Search bar --><Title title="Foody Receipt"></Title>
     <div class="row mt-2 mb-4">
       <div class="col-10">
         <input
@@ -36,48 +39,21 @@ export default defineComponent({
         />
       </div>
       <div class="col-2">
-        <button type="button" class="btn btn-outline-primary btn-lg w-100">
+        <button class="btn btn-outline-primary btn-lg w-100" type="button">
           🔍 Search
         </button>
       </div>
     </div>
-
     <!-- Card component list -->
     <div class="row row-cols-1 row-cols-md-5 g-4 mt-3">
-      <div v-for="i in 14" class="col">
-        <div class="card h-100">
-          <img
-            src="https://www.themealdb.com/images/category/chicken.png"
-            class="card-img-top"
-            alt="nice pic"
-          />
-          <div class="card-body">
-            <h5 class="card-title">Chiken</h5>
-            <p class="card-text">
-              {{
-                truncateText(
-                  `Chicken is a type of domesticated fowl, a subspecies of the red
-              junglefowl. It is one of the most common and widespread domestic
-              animals, with a total population of more than 19 billion as of
-              2011.[1] Humans commonly keep chickens as a source of food
-              (consuming both their meat and eggs) and, more rarely, as pets.`,
-                  100
-                )
-              }}
-            </p>
-            <p class="text-end mb-0">
-              <a href="#">
-                <small>Read more...</small>
-              </a>
-            </p>
-          </div>
-        </div>
-      </div>
+      <Card v-for="data in categoryData" :key="data.idCategory" 
+      :category="data.strCategory" 
+      :description="data.strCategoryDescription"
+      :image="data.strCategoryThumb" />
     </div>
-
-    <!-- Footer component -->
+    ><!-- Footer component -->
     <footer class="footer py-3 text-center mt-5 mb-4">
-      <p class="m-0">Create with ❤️‍🔥 and 🖐 in Denpasar</p>
+      <p class="m-0">Create with \ \\\ ❤️‍🔥 and 🖐 in Denpasar</p>
       <small
         ><a href="https://github.com/primakara-developers"
           >Primakara Developers {{ new Date().getFullYear() }}</a
