@@ -1,12 +1,12 @@
 <script>
 export default {
-    props:{
-        category: {type: String, default: ""},
-        description: {type: String, default: ""},
-        image: {type: String, default: ""},
-    },
+  props: {
+    category: { type: String, default: "" },
+    description: { type: String, default: "" },
+    image: { type: String, default: "" },
+  },
   setup() {
-      const truncateText = (str, length, ending) => {
+    const truncateText = (str, length, ending) => {
       if (length == null) {
         length = 100;
       }
@@ -28,22 +28,14 @@ export default {
 <template>
   <div class="col">
     <div class="card h-100">
-      <img
-        :src="image"
-        class="card-img-top"
-        alt="nice pic"
-      />
+      <img :src="image" class="card-img-top" alt="nice pic" />
       <div class="card-body">
-        <h5 class="card-title">{{category}}</h5>
+        <h5 class="card-title">{{ category }}</h5>
         <p class="card-text">
-          {{
-            truncateText(description, 100)
-          }}
+          {{ truncateText(description, 100) }}
         </p>
         <p class="text-end mb-0">
-          <a href="#">
-            <small>Read more...</small>
-          </a>
+          <router-link :to="`/receipt/${category}`">Read more</router-link>
         </p>
       </div>
     </div>
