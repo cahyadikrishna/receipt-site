@@ -2,32 +2,29 @@
 import { ref } from "vue";
 import Title from "@/components/Title.vue";
 import Card from "@/components/Card.vue";
+import Footer from "@/components/Footer.vue";
+import api from "@/api/api.js";
 import { useRoute } from "vue-router";
-import { computed } from "vue";
 
 export default {
-  name: "App",
+  name: "Menu",
   components: {
     Title,
     Card,
+    Footer,
   },
   setup() {
     const route = useRoute();
-    const receiptData = ref([]);
+    const menuData = ref([]);
 
-    console.log(route.params.category)
-
-    async function getReceipt() {
-      const response = await fetch(
-        `https://www.themealdb.com/api/json/v1/1/filter.php?c=${route.params.category}`
-      );
-      const json = await response.json();
-      receiptData.value=json.meals
-      console.log(receiptData);
+    async function getMenu() {
+      const response = await api(`/filter.php?c=${route.params.category}`);
+      menuData.value = response.meals;
+      console.log(menuData);
     }
-    getReceipt();
+    getMenu();
 
-    return { Title, Card, receiptData, route };
+    return { Title, Card, Footer, menuData, route };
   },
 };
 </script>
@@ -35,9 +32,9 @@ export default {
 <template>
   <div class="container d-flex flex-column justify-content-center">
     <Title :title="route.params.category"></Title>
-    
+
     <router-view></router-view>
-    
+
     <!-- Search bar -->
     <div class="row mt-2 mb-4">
       <div class="col-10">
@@ -56,13 +53,16 @@ export default {
     <!-- Card component list -->
     <div class="row row-cols-1 row-cols-md-5 g-4 mt-3">
       <Card
-        v-for="data in receiptData"
+        v-for="data in menuData"
         :key="data.idMeal"
         :category="data.strMeal"
+        :description="data.strDescription"
         :image="data.strMealThumb"
+        :link="`/detail/${data.idMeal}`"
       />
     </div>
-    ><!-- Footer component -->
+    <!-- Footer component -->
+    <Footer />
   </div>
 </template>
 

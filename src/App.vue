@@ -1,15 +1,27 @@
 <script>
-import Footer from "@/components/Footer.vue" 
+import Title from "@/components/Title.vue";
+import Loading from "@/views/Loading.vue";
 
-export default{
-  components: { Footer },
-  setup(){
-    return { Footer };
+export default {
+  components: { Title, Loading },
+  setup() {
+    return { Title };
+  },
+  data() {
+    return {
+      loading: true,
+    };
   },
 };
 </script>
 
 <template>
+  <Loading />
   <router-view />
-  <Footer />
 </template>
+
+<style>
+body {
+  background-color: #f5f5f5;
+}
+</style>

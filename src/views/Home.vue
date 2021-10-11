@@ -1,30 +1,29 @@
 <script>
 import { ref } from "vue";
 import Title from "@/components/Title.vue";
+import Footer from "@/components/Footer.vue";
 import Card from "@/components/Card.vue";
-import { computed } from "vue";
+import api from "@/api/api.js";
 
 export default {
-  name: "App",
+  name: "Home",
   components: {
     Title,
     Card,
+    Footer,
   },
   setup() {
     const categoryData = ref([]);
 
     async function getData() {
-      const response = await fetch(
-        "https://www.themealdb.com/api/json/v1/1/categories.php"
-      );
-      const json = await response.json();
+      const response = await api("/categories.php");
       // console.log(json);
-      categoryData.value = json.categories;
+      categoryData.value = response.categories;
       // console.log(categoryData.value);
     }
     getData();
 
-    return { Title, Card, categoryData };
+    return { Title, Card, Footer, categoryData };
   },
 };
 </script>
@@ -32,9 +31,7 @@ export default {
 <template>
   <div class="container d-flex flex-column justify-content-center">
     <Title title="Foody Receipt"></Title>
-    
-    <router-view></router-view>
-    
+
     <!-- Search bar -->
     <div class="row mt-2 mb-4">
       <div class="col-10">
@@ -58,9 +55,11 @@ export default {
         :category="data.strCategory"
         :description="data.strCategoryDescription"
         :image="data.strCategoryThumb"
+        :link="`/menu/${data.strCategory}`"
       />
     </div>
-    ><!-- Footer component -->
+    <!-- Footer component -->
+    <Footer />
   </div>
 </template>
 
