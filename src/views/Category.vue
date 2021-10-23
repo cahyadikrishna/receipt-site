@@ -1,36 +1,40 @@
 <script>
 import { ref } from "vue";
 import Title from "@/components/Title.vue";
-import Footer from "@/components/Footer.vue";
 import Card from "@/components/Card.vue";
+import Footer from "@/components/Footer.vue";
 import api from "@/api/api.js";
+import { useRoute } from "vue-router";
 
 export default {
-  name: "Home",
+  name: "Category",
   components: {
     Title,
     Card,
     Footer,
   },
-  setup(props,{emit}) {
-    const categoryData = ref([]);
-  
-    async function getData() {
+  setup(props, {emit}) {
+    const route = useRoute();
+    const menuData = ref([]);
+
+    async function getMenu() {
       emit("loadingStatus", true);
-      const response = await api("/categories.php");
-      categoryData.value = response.categories;
+      const response = await api(`/filter.php?c=${route.params.category}`);
+      menuData.value = response.meals;
       emit("loadingStatus", false);
     }
-    getData();
+    getMenu();
 
-    return { Title, Card, Footer, categoryData };
+    return { Title, Card, Footer, menuData, route };
   },
 };
 </script>
 
 <template>
   <div class="container d-flex flex-column justify-content-center">
-    <Title title="Foody Receipt"></Title>
+    <Title :title="route.params.category"></Title>
+
+    <router-view></router-view>
 
     <!-- Search bar -->
     <div class="row mt-2 mb-4">
@@ -50,12 +54,12 @@ export default {
     <!-- Card component list -->
     <div class="row row-cols-1 row-cols-md-5 g-4 mt-3">
       <Card
-        v-for="data in categoryData"
-        :key="data.idCategory"
-        :category="data.strCategory"
-        :description="data.strCategoryDescription"
-        :image="data.strCategoryThumb"
-        :link="`/category/${data.strCategory}`"
+        v-for="data in menuData"
+        :key="data.idMeal"
+        :category="data.strMeal"
+        :description="data.strDescription"
+        :image="data.strMealThumb"
+        :link="`/detail/${data.idMeal}`"
       />
     </div>
     <!-- Footer component -->

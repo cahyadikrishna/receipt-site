@@ -1,23 +1,26 @@
 <script>
+import { ref } from "vue";
 import Title from "@/components/Title.vue";
-import Loading from "@/views/Loading.vue";
+import Loader from "@/components/Loader.vue";
 
 export default {
-  components: { Title, Loading },
+  components: { Title, Loader },
   setup() {
-    return { Title };
-  },
-  data() {
-    return {
-      loading: true,
-    };
+    const loading = ref(false);
+    function doUpdateLoading(status){
+      console.log(status);
+      loading.value = status;
+    }
+    return { Title, Loader, loading, doUpdateLoading };
   },
 };
 </script>
 
 <template>
-  <Loading />
-  <router-view />
+  <Loader v-if="loading" />
+  <div v-show="loading === false">
+    <router-view @loadingStatus="doUpdateLoading"/>
+  </div>
 </template>
 
 <style>

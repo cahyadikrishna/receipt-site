@@ -13,16 +13,17 @@ export default {
     ReceiptDetail,
     Footer,
   },
-  setup() {
+  setup(props, {emit}) {
     const route = useRoute();
     const detailData = ref([]);
 
-    console.log(route.params.id);
+    // console.log(route.params.id);
 
     async function getDetail() {
+      emit("loadingStatus", true);
       const response = await api(`/lookup.php?i=${route.params.id}`);
       detailData.value = response.meals;
-      console.log(detailData);
+      emit("loadingStatus", false);
     }
     getDetail();
 

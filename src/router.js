@@ -2,7 +2,7 @@ import { createWebHistory, createRouter } from "vue-router";
 
 import Home from "@/views/Home.vue";
 import About from "@/views/About.vue";
-import Menu from "@/views/Menu.vue";
+import Category from "@/views/Category.vue";
 import Detail from "@/views/Detail.vue";
 import NotFound from "@/views/NotFound.vue";
 
@@ -18,9 +18,9 @@ const routes = [
     component: About,
   },
   {
-    path: "/menu/:category",
-    name: "Menu",
-    component: Menu,
+    path: "/category/:category",
+    name: "Category",
+    component: Category,
   },
   {
     path: "/detail/:id",
